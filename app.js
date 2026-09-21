@@ -1,5 +1,5 @@
-import { TRIP, PLACES, LEGS, RECOMMENDED, HOUSES, SCORE_CATS } from './data.js?v=202609211200';
-import * as store from './store.js?v=202609211200';
+import { TRIP, PLACES, LEGS, RECOMMENDED, HOUSES, SCORE_CATS } from './data.js?v=202609211300';
+import * as store from './store.js?v=202609211300';
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -519,12 +519,20 @@ function ensureMe() {
   if (me) return Promise.resolve(true);
   return askMe();
 }
+// One prompt at a time: a second tap while the dialog is open waits on the
+// same answer instead of replacing the handlers and stranding the first action.
+let asking = null, cancelAsk = null;
 function askMe() {
   const dlg = $('#whoDlg');
+  if (asking && dlg.open) return asking;
+  if (cancelAsk) cancelAsk(); // dialog was dismissed without a close event reaching us
   $('#whoInput').value = me;
-  return new Promise(res => {
-    const done = ok => { dlg.close(); res(ok); };
+  return asking = new Promise(res => {
+    let settled = false;
+    const done = ok => { if (settled) return; settled = true; asking = cancelAsk = null; if (dlg.open) dlg.close(); res(ok); };
+    cancelAsk = () => done(false);
     $('#whoCancel').onclick = () => done(false);
+    dlg.onclose = () => { if (!dlg.open) done(false); }; // Escape closes it natively; ignore a late event after reopening
     dlg.querySelector('form').onsubmit = e => {
       e.preventDefault();
       const v = $('#whoInput').value.trim();
