@@ -30,36 +30,29 @@ No build step. Preview locally with `npx serve prescott-homes --listen 3019`.
 
 The Chandler start address is never stored. `data.js` has drive times from it, not its location.
 
-## Turning on shared notes
+## Shared notes and locking things down
 
 The page uses the existing `bourbonffldraft` Firebase project (the pick'em site's), in its own
-`prescott` collection. That collection needs a rule. Until it has one, the page saves to the
-device only and shows a banner saying so.
+`prescott` collection. [`firestore.rules`](firestore.rules) is the **full** rules file for the
+project: paste all of it into Firebase console → bourbonffldraft → Firestore → Rules. It leaves
+the pick'em blocks unchanged and accepts only what this site actually writes: the four known
+houses, the known fields, and capped sizes. Notes and photos can be added or deleted but not
+edited. If the rules reject the collection entirely, the page falls back to saving on the device
+and shows a banner saying so.
 
-Firebase console → bourbonffldraft → Firestore → Rules. Add the `prescott` block next to the
-existing ones and publish:
+There's still no login, so anyone with the URL can add or delete. Keep offer amounts and finances
+out of it.
 
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /entries/{entry} {
-      allow read: if true;
-      allow write: if true;
-    }
-    match /config/settings {
-      allow read: if true;
-      allow write: if true;
-    }
-    match /prescott/{document=**} {
-      allow read, write: if true;
-    }
-  }
-}
-```
+**About the API key GitHub flagged.** A Firebase web key has to reach the browser, so there's no
+way to hide it, and it isn't what protects the data (the rules are). To stop the key being
+reused from other sites, restrict it in Google Cloud console → APIs & Services → Credentials →
+the "Browser key (auto created by Firebase)":
 
-As with the pick'em, this is open to anyone who has the URL. Fine for a weekend's notes, but
-nothing sensitive (offer amounts, finances) belongs in it.
+- Application restrictions → Websites: `https://brianchernauskas.github.io/*`, `http://localhost:*/*`
+- API restrictions → Restrict key → **Cloud Firestore API** only
+
+The pick'em GitHub Actions jobs send a matching `Referer` header (`tools/lib.mjs`), so they
+keep working under the restriction.
 
 Layout:
 
