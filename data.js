@@ -34,7 +34,8 @@ export const LEGS = {
   idylwild: { home: [128.9, 159], hotel: [1.9, 5], whiskey: [1.6, 4], quintero: [8.8, 18], lavalley: [2.4, 7], pyrite: [6.6, 17] },
 };
 
-export const RECOMMENDED = ['quintero', 'pyrite', 'lavalley', 'idylwild'];
+// Pyrite went under contract 2026-09-23, so it's off the route but still on the page.
+export const RECOMMENDED = ['quintero', 'lavalley', 'idylwild'];
 
 const px = (base, ids) => ids.map(id => `https://${base}${id}od-w1024_h768.jpg`);
 
@@ -139,7 +140,9 @@ export const HOUSES = [
     lotAcres: 0.18,
     yearBuilt: 1987,
     listed: '2026-09-15',
-    status: 'New listing',
+    status: 'Under contract',
+    inactive: true,
+    statusNote: 'Went under contract on Sep 23, before you could see it. Left here for comparison. Your agent can ask whether the sellers are taking backup offers, since contingent deals do fall through.',
     hoa: 'None',
     tax: '$1,567',
     water: 'Shared private well', sewer: 'Septic',

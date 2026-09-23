@@ -141,6 +141,13 @@ input, textarea, select { font-size: 16px; }
 .photo-note { font-size: 12.5px; color: var(--muted); margin: 4px 0 0; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .warn { margin-top: 10px; padding: 9px 12px; border-radius: 10px; background: var(--clay-soft); color: var(--ink); font-size: 13.5px; }
 .warn b { color: var(--clay); }
+.warn.off { background: var(--surface-2); }
+.warn.off b { color: var(--muted); }
+.chip.off { background: var(--surface-2); color: var(--muted); }
+.pick.off .pick-t, .pick.off .pick-p { color: var(--muted); }
+.pick.off { border-style: dashed; }
+.pin.off { background: #7C8A83; }
+.cmp th.off, .cmp td.off { color: var(--muted); }
 
 .h-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin: 18px 0 14px; }
 .h-head h3 { font-size: 26px; }

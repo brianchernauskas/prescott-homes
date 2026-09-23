@@ -1,5 +1,5 @@
-import { TRIP, PLACES, LEGS, RECOMMENDED, HOUSES, SCORE_CATS } from './data.js?v=202609211300';
-import * as store from './store.js?v=202609211300';
+import { TRIP, PLACES, LEGS, RECOMMENDED, HOUSES, SCORE_CATS } from './data.js?v=202609231000';
+import * as store from './store.js?v=202609231000';
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -7,10 +7,12 @@ const byId = Object.fromEntries(HOUSES.map(h => [h.id, h]));
 const money = n => '$' + Math.round(n).toLocaleString('en-US');
 const ppsf = h => Math.round(h.price / h.sqft);
 const PAD = 1.10; // drive-time padding for traffic and parking
+const ACTIVE = HOUSES.filter(h => !h.inactive);            // still for sale, so still on the route
+const isActive = id => Boolean(byId[id]) && !byId[id].inactive;
 
 const DEFAULT_PLAN = () => ({
   order: [...RECOMMENDED],
-  day: Object.fromEntries(HOUSES.map(h => [h.id, 'sat'])),
+  day: Object.fromEntries(ACTIVE.map(h => [h.id, 'sat'])),
   booked: {},
   depart: '08:00',
   sunStart: '09:00',
@@ -46,7 +48,7 @@ const ago = ts => {
 // --- schedule ---------------------------------------------------------------
 
 function buildDay(day) {
-  const stops = plan.order.filter(id => plan.day[id] === day);
+  const stops = plan.order.filter(id => isActive(id) && plan.day[id] === day);
   const items = [];
   const startAt = day === 'sat' ? 'home' : 'hotel';
   let t = toMin(day === 'sat' ? plan.depart : plan.sunStart);
@@ -84,7 +86,7 @@ function renderDay(day) {
     el.innerHTML = `<li class="empty-day">Nothing on Sunday yet. Tap <b>→ Sun</b> on a home to move it here.</li>`;
     return;
   }
-  const sameDay = plan.order.filter(id => plan.day[id] === day);
+  const sameDay = plan.order.filter(id => isActive(id) && plan.day[id] === day);
   el.innerHTML = items.map(it => {
     if (it.kind === 'drive') return `<li class="tl-drive"><span>🚗 ${it.min} min · ${it.mi} mi</span></li>`;
     if (it.kind === 'fixed') return `<li class="tl"><span class="tl-time">${fmt(it.t)}</span><div class="tl-box fixed"><span class="num ico">${it.icon}</span><div class="tl-main"><div class="tl-name">${esc(it.label)}</div></div></div></li>`;
@@ -135,7 +137,7 @@ function wirePlan() {
     const mv = e.target.closest('[data-move]');
     if (mv) {
       const id = mv.dataset.move, dir = Number(mv.dataset.dir);
-      const same = plan.order.filter(x => plan.day[x] === plan.day[id]);
+      const same = plan.order.filter(x => isActive(x) && plan.day[x] === plan.day[id]);
       const j = same.indexOf(id) + dir;
       if (j < 0 || j >= same.length) return;
       const a = plan.order.indexOf(id), b = plan.order.indexOf(same[j]);
@@ -172,7 +174,8 @@ function initMap() {
 }
 
 function numberFor(id) {
-  const same = plan.order.filter(x => plan.day[x] === plan.day[id]);
+  if (!isActive(id)) return '—';
+  const same = plan.order.filter(x => isActive(x) && plan.day[x] === plan.day[id]);
   return same.indexOf(id) + 1;
 }
 
@@ -182,9 +185,10 @@ function renderMapPins() {
   pinLayer.clearLayers();
   HOUSES.forEach(h => {
     const day = plan.day[h.id];
-    const icon = L.divIcon({ className: '', html: `<div class="pin ${day === 'sun' ? 'sun' : ''} ${h.id === selected ? 'sel' : ''}"><b>${numberFor(h.id)}</b></div>`, iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
+    const tone = h.inactive ? 'off' : day === 'sun' ? 'sun' : '';
+    const icon = L.divIcon({ className: '', html: `<div class="pin ${tone} ${h.id === selected ? 'sel' : ''}"><b>${h.inactive ? '·' : numberFor(h.id)}</b></div>`, iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
     L.marker([h.lat, h.lon], { icon, zIndexOffset: 1000 }).addTo(pinLayer)
-      .bindPopup(`<b>${esc(h.addr)}</b><br>${money(h.price)} · ${h.beds} bd / ${h.baths} ba · ${h.sqft.toLocaleString()} sq ft<br>${day === 'sun' ? 'Sunday' : 'Saturday'} stop ${numberFor(h.id)}<br><a href="#homes" class="pop-link" data-go="${h.id}">Open details →</a>`);
+      .bindPopup(`<b>${esc(h.addr)}</b><br>${money(h.price)} · ${h.beds} bd / ${h.baths} ba · ${h.sqft.toLocaleString()} sq ft<br>${h.inactive ? 'Under contract — not on the route' : (day === 'sun' ? 'Sunday' : 'Saturday') + ' stop ' + numberFor(h.id)}<br><a href="#homes" class="pop-link" data-go="${h.id}">Open details →</a>`);
   });
   renderPois();
   drawRoutes();
@@ -206,8 +210,8 @@ async function drawRoutes() {
   const req = ++routeReq;
   routeLayer.clearLayers();
   const hotel = [PLACES.hotel.lat, PLACES.hotel.lon];
-  const sat = plan.order.filter(id => plan.day[id] === 'sat').map(id => [byId[id].lat, byId[id].lon]);
-  const sun = plan.order.filter(id => plan.day[id] === 'sun').map(id => [byId[id].lat, byId[id].lon]);
+  const sat = plan.order.filter(id => isActive(id) && plan.day[id] === 'sat').map(id => [byId[id].lat, byId[id].lon]);
+  const sun = plan.order.filter(id => isActive(id) && plan.day[id] === 'sun').map(id => [byId[id].lat, byId[id].lon]);
   const lines = [];
   if (sat.length) lines.push({ pts: [...sat, hotel], color: '#2F5D46' });
   if (sun.length) lines.push({ pts: [hotel, ...sun], color: '#6A4FB0' });
@@ -226,13 +230,18 @@ async function drawRoutes() {
 
 // --- homes ------------------------------------------------------------------
 
+function visitSequence() {
+  const on = d => plan.order.filter(id => isActive(id) && plan.day[id] === d);
+  return [...on('sat'), ...on('sun'), ...HOUSES.filter(h => h.inactive).map(h => h.id)];
+}
+
 function renderPicker() {
-  const seq = [...plan.order.filter(id => plan.day[id] === 'sat'), ...plan.order.filter(id => plan.day[id] === 'sun')];
+  const seq = visitSequence();
   $('#picker').innerHTML = seq.map(id => byId[id]).map(h => {
     const n = (notes[h.id] || []).length;
-    return `<button class="pick" role="tab" aria-selected="${h.id === selected}" data-pick="${h.id}">
-      <span class="num ${plan.day[h.id]}">${numberFor(h.id)}</span>
-      <span><span class="pick-t">${esc(h.short)}</span><br><span class="pick-p">${money(h.price)}</span></span>
+    return `<button class="pick ${h.inactive ? 'off' : ''}" role="tab" aria-selected="${h.id === selected}" data-pick="${h.id}">
+      <span class="num ${h.inactive ? 'ico' : plan.day[h.id]}">${numberFor(h.id)}</span>
+      <span><span class="pick-t">${esc(h.short)}</span><br><span class="pick-p">${h.inactive ? 'Under contract' : money(h.price)}</span></span>
       ${n ? `<span class="badge">${n} note${n > 1 ? 's' : ''}</span>` : ''}
     </button>`;
   }).join('');
@@ -264,11 +273,12 @@ function renderHouse() {
   $('#house').innerHTML = `
     <div class="photos" id="listingPhotos">${h.photos.map((u, i) => `<img src="${u}" loading="${i < 2 ? 'eager' : 'lazy'}" alt="${esc(h.addr)} listing photo ${i + 1}" data-full="${u}" referrerpolicy="no-referrer">`).join('')}</div>
     <p class="photo-note"><span>${h.photos.length} of ${h.photoCount} listing photos · swipe →</span><a href="${h.url}" target="_blank" rel="noopener">All photos on realtor.com</a></p>
+    ${h.inactive ? `<div class="warn off"><b>Under contract.</b> ${esc(h.statusNote || '')}</div>` : ''}
     ${h.photoWarning ? `<div class="warn"><b>Heads up:</b> ${esc(h.photoWarning)}</div>` : ''}
 
     <div class="h-head">
       <div><h3>${esc(h.addr)}</h3><div class="h-city">${esc(h.city)} · ${esc(h.area)}</div></div>
-      <div style="text-align:right"><div class="price">${money(h.price)}</div><span class="chip ${/reduced/i.test(h.status) ? 'clay' : ''}">${esc(h.status)}</span></div>
+      <div style="text-align:right"><div class="price">${money(h.price)}</div><span class="chip ${h.inactive ? 'off' : /reduced/i.test(h.status) ? 'clay' : ''}">${esc(h.status)}</span></div>
     </div>
     <div class="h-actions">
       <a class="primary-link" href="${gmaps}" target="_blank" rel="noopener">Directions</a>
@@ -473,7 +483,7 @@ async function uploadPhotos(house, files) {
 // --- compare ----------------------------------------------------------------
 
 function renderCompare() {
-  const hs = [...plan.order.filter(id => plan.day[id] === 'sat'), ...plan.order.filter(id => plan.day[id] === 'sun')].map(id => byId[id]);
+  const hs = visitSequence().map(id => byId[id]);
   const min = f => Math.min(...hs.map(f));
   const max = f => Math.max(...hs.map(f));
   const cell = (v, best) => `<td class="${best ? 'best' : ''}">${v}</td>`;
@@ -483,7 +493,7 @@ function renderCompare() {
   const people = [...new Set(hs.flatMap(h => stats[h.id].people.map(p => p.by)))];
   const bestAvg = Math.max(...hs.map(h => stats[h.id].avg ?? -1));
   $('#cmp').innerHTML = `
-    <thead><tr><th></th>${hs.map(h => `<th><a href="#homes" data-go="${h.id}" style="color:inherit;text-decoration:none">${esc(h.short)}</a><small>${plan.day[h.id] === 'sun' ? 'Sun' : 'Sat'} #${numberFor(h.id)}</small></th>`).join('')}</tr></thead>
+    <thead><tr><th></th>${hs.map(h => `<th class="${h.inactive ? 'off' : ''}"><a href="#homes" data-go="${h.id}" style="color:inherit;text-decoration:none">${esc(h.short)}</a><small>${h.inactive ? 'Under contract' : (plan.day[h.id] === 'sun' ? 'Sun' : 'Sat') + ' #' + numberFor(h.id)}</small></th>`).join('')}</tr></thead>
     <tbody>
       ${grp('The house')}
       ${row('Price', h => money(h.price), h => h.price === min(x => x.price))}
@@ -601,7 +611,7 @@ async function main() {
     if (!p) return;
     const base = DEFAULT_PLAN();
     plan = { ...base, ...p, day: { ...base.day, ...(p.day || {}) }, booked: { ...(p.booked || {}) } };
-    plan.order = [...new Set([...(p.order || []).filter(id => byId[id]), ...RECOMMENDED])];
+    plan.order = [...new Set([...(p.order || []).filter(isActive), ...RECOMMENDED])];
     renderPlan(); renderMapPins(); renderPicker(); renderCompare();
   });
   HOUSES.forEach(h => {
