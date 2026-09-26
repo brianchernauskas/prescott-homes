@@ -38,8 +38,8 @@ export const LEGS = {
 };
 
 // Pyrite went under contract 2026-09-23, so it's off the route but still on the page.
-// The three agent-collection houses added 2026-09-26 default to Sunday (defaultDay), starting at the hotel.
-export const RECOMMENDED = ['quintero', 'lavalley', 'idylwild', 'banning', 'quartz', 'ponderosa'];
+// The three agent-collection houses added 2026-09-26 are all on Saturday; `defaultDay: 'sun'` on a house would default it to Sunday.
+export const RECOMMENDED = ['quintero', 'idylwild', 'banning', 'lavalley', 'quartz', 'ponderosa'];
 
 // The agent's flexmls collection of the three added houses (MLS sheets, no login needed).
 const LIST_URL = 'https://www.flexmls.com/link.html?1zd6jq9y4g1o,12,1,44074';
@@ -232,7 +232,6 @@ export const HOUSES = [
   // wildfire mix comes from the same 7x7 USFS grid method as the others.
   {
     id: 'banning',
-    defaultDay: 'sun',
     short: 'Banning Creek',
     addr: '375 Banning Creek Rd',
     city: 'Prescott, AZ 86303',
@@ -278,7 +277,6 @@ export const HOUSES = [
   },
   {
     id: 'quartz',
-    defaultDay: 'sun',
     short: 'Quartz',
     addr: '1347 W Quartz Rd',
     city: 'Prescott, AZ 86303',
@@ -326,7 +324,6 @@ export const HOUSES = [
   },
   {
     id: 'ponderosa',
-    defaultDay: 'sun',
     short: 'Ponderosa Park',
     addr: '4647 S Ponderosa Park Rd',
     city: 'Prescott, AZ 86303',
