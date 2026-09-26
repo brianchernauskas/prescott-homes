@@ -1,5 +1,5 @@
-import { TRIP, PLACES, LEGS, RECOMMENDED, SAT_BOOKED, HOUSES, SCORE_CATS } from './data.js?v=202609260845';
-import * as store from './store.js?v=202609260845';
+import { TRIP, PLACES, LEGS, RECOMMENDED, SAT_BOOKED, HOUSES, SCORE_CATS } from './data.js?v=202609260850';
+import * as store from './store.js?v=202609260850';
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -16,7 +16,7 @@ const DEFAULT_PLAN = () => ({
   booked: { ...SAT_BOOKED },
   depart: '08:00',
   sunStart: '09:00',
-  dwell: 45,
+  dwell: 25,
   lunch: true,
 });
 
