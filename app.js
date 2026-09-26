@@ -1,5 +1,5 @@
-import { TRIP, PLACES, LEGS, RECOMMENDED, HOUSES, SCORE_CATS } from './data.js?v=202609231000';
-import * as store from './store.js?v=202609231000';
+import { TRIP, PLACES, LEGS, RECOMMENDED, HOUSES, SCORE_CATS } from './data.js?v=202609261200';
+import * as store from './store.js?v=202609261200';
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -12,7 +12,7 @@ const isActive = id => Boolean(byId[id]) && !byId[id].inactive;
 
 const DEFAULT_PLAN = () => ({
   order: [...RECOMMENDED],
-  day: Object.fromEntries(ACTIVE.map(h => [h.id, 'sat'])),
+  day: Object.fromEntries(ACTIVE.map(h => [h.id, h.defaultDay || 'sat'])),
   booked: {},
   depart: '08:00',
   sunStart: '09:00',
@@ -36,7 +36,7 @@ const toMin = t => { const [h, m] = String(t || '0:0').split(':').map(Number); r
 const toHHMM = m => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 const fmt = m => { m = Math.round(m); let h = Math.floor(m / 60) % 24; const mm = String(m % 60).padStart(2, '0'); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${h}:${mm} ${ap}`; };
 const leg = (a, b) => { const l = LEGS[a]?.[b]; return l ? { mi: l[0], min: Math.ceil(l[1] * PAD) } : { mi: 0, min: 0 }; };
-const daysOnMarket = h => Math.max(0, Math.floor((Date.now() - new Date(h.listed + 'T12:00:00-07:00')) / 864e5));
+const daysOnMarket = h => !h.listed ? '—' : Math.max(0, Math.floor((Date.now() - new Date(h.listed + 'T12:00:00-07:00')) / 864e5));
 const ago = ts => {
   const s = (Date.now() - ts) / 1000;
   if (s < 60) return 'just now';
@@ -272,9 +272,10 @@ function renderHouse() {
 
   $('#house').innerHTML = `
     <div class="photos" id="listingPhotos">${h.photos.map((u, i) => `<img src="${u}" loading="${i < 2 ? 'eager' : 'lazy'}" alt="${esc(h.addr)} listing photo ${i + 1}" data-full="${u}" referrerpolicy="no-referrer">`).join('')}</div>
-    <p class="photo-note"><span>${h.photos.length} of ${h.photoCount} listing photos · swipe →</span><a href="${h.url}" target="_blank" rel="noopener">All photos on realtor.com</a></p>
+    <p class="photo-note"><span>${h.photoCount ? `${h.photos.length} of ${h.photoCount}` : h.photos.length} listing photo${h.photos.length > 1 || h.photoCount ? 's' : ''}${h.photos.length > 1 ? ' · swipe →' : ''}</span><a href="${h.url}" target="_blank" rel="noopener">All photos on ${h.src || 'realtor.com'}</a></p>
     ${h.inactive ? `<div class="warn off"><b>Under contract.</b> ${esc(h.statusNote || '')}</div>` : ''}
     ${h.photoWarning ? `<div class="warn"><b>Heads up:</b> ${esc(h.photoWarning)}</div>` : ''}
+    ${h.approxPin ? `<div class="warn"><b>Heads up:</b> The map pin and drive times use a point on the street, since the map data doesn’t know this address yet. Directions use the street address.</div>` : ''}
 
     <div class="h-head">
       <div><h3>${esc(h.addr)}</h3><div class="h-city">${esc(h.city)} · ${esc(h.area)}</div></div>
@@ -282,7 +283,7 @@ function renderHouse() {
     </div>
     <div class="h-actions">
       <a class="primary-link" href="${gmaps}" target="_blank" rel="noopener">Directions</a>
-      <a href="${h.url}" target="_blank" rel="noopener">Listing on realtor.com</a>
+      <a href="${h.url}" target="_blank" rel="noopener">Listing on ${h.src || 'realtor.com'}${h.mls ? ' · MLS #' + h.mls : ''}</a>
       <a href="#map-sec">Show on map</a>
     </div>
 
@@ -293,7 +294,7 @@ function renderHouse() {
       <div class="stat"><div class="stat-v">${lot}</div><div class="stat-l">Land</div><div class="stat-n">${esc(lotN)}</div></div>
       <div class="stat"><div class="stat-v">${h.yearBuilt}</div><div class="stat-l">Year built</div>${h.yearNote ? `<div class="stat-n">${esc(h.yearNote)}</div>` : ''}</div>
       <div class="stat"><div class="stat-v">$${ppsf(h)}</div><div class="stat-l">Per sq ft</div></div>
-      <div class="stat"><div class="stat-v">${dom}</div><div class="stat-l">Days on market</div><div class="stat-n">Listed ${new Date(h.listed + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div></div>
+      <div class="stat"><div class="stat-v">${dom}</div><div class="stat-l">Days on market</div><div class="stat-n">${h.listed ? 'Listed ' + new Date(h.listed + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Listing date not on the sheet'}</div></div>
       <div class="stat"><div class="stat-v">${h.elevation.toLocaleString()} ft</div><div class="stat-l">Elevation</div></div>
     </div>
 
@@ -326,7 +327,7 @@ function renderHouse() {
         <div class="mixbar">${FIRE_KEY.filter(([k]) => h.fire.mix[k]).map(([k, , c]) => `<i style="width:${h.fire.mix[k]}%;background:${c}" title="${k} ${h.fire.mix[k]}%"></i>`).join('')}</div>
         <div class="mixkey">${FIRE_KEY.filter(([k]) => h.fire.mix[k]).map(([k, l, c]) => `<span style="--c:${c}">${l} ${h.fire.mix[k]}%</span>`).join('')}</div>
         <div class="rel">
-          <div class="small muted" style="margin-bottom:4px">Modeled risk to a home, compared with the other three</div>
+          <div class="small muted" style="margin-bottom:4px">Modeled risk to a home, compared with the other homes</div>
           ${[...HOUSES].sort((a, b) => b.fire.rps - a.fire.rps).map(x => `<div class="rel-row ${x.id === h.id ? 'me' : ''}"><span>${esc(x.short)}</span><span class="rel-bar"><i style="width:${Math.max(2, x.fire.rps / maxRps * 100)}%"></i></span><span>${x.fire.rps}</span></div>`).join('')}
         </div>
         <p class="fire-text">${esc(h.fire.text)}</p>

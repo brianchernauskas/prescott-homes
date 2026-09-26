@@ -1,7 +1,7 @@
 # Prescott Home Tour
 
 A phone-first planner for a Sat Sep 26 – Sun Sep 27, 2026 house-hunting weekend in Prescott, AZ:
-four realtor.com listings, a map, a suggested visit order, and shared notes, photos and 1–5 scores.
+seven listings (realtor.com plus the agent’s flexmls collection), a map, a suggested visit order, and shared notes, photos and 1–5 scores.
 
 Live: https://brianchernauskas.github.io/prescott-homes/
 
@@ -11,7 +11,7 @@ Live: https://brianchernauskas.github.io/prescott-homes/
 | --- | --- |
 | `index.html` | Page shell |
 | `style.css` | All styling, light + dark |
-| `data.js` | The four houses, drive-time matrix, wildfire figures, nearest places |
+| `data.js` | The seven houses, drive-time matrix, wildfire figures, nearest places |
 | `store.js` | Firestore adapter with a this-device-only fallback |
 | `app.js` | Plan builder, map, house pages, notes/photos/scores, compare table |
 
@@ -19,7 +19,7 @@ No build step. Preview locally with `npx serve prescott-homes --listen 3019`.
 
 ## Where the data came from (pulled 2026-09-21)
 
-- **Listings:** realtor.com listing pages (MLS data). Photos are hotlinked from realtor.com's CDN, not copied.
+- **Listings:** realtor.com listing pages (MLS data). Photos are hotlinked from the listing CDNs (realtor.com, Spark/flexmls), not copied.
 - **Wildfire:** USDA Forest Service *Wildfire Risk to Communities* 2024 rasters, via
   `imagery.geoplatform.gov/iipp/rest/services/Fire_Aviation`. Hazard class (WHP) and risk to potential
   structures were sampled on a 7×7 grid at 60 m spacing around each house, because a single point
@@ -35,7 +35,7 @@ The Chandler start address is never stored. `data.js` has drive times from it, n
 The page uses the existing `bourbonffldraft` Firebase project (the pick'em site's), in its own
 `prescott` collection. [`firestore.rules`](firestore.rules) is the **full** rules file for the
 project: paste all of it into Firebase console → bourbonffldraft → Firestore → Rules. It leaves
-the pick'em blocks unchanged and accepts only what this site actually writes: the four known
+the pick'em blocks unchanged and accepts only what this site actually writes: the seven known
 houses, the known fields, and capped sizes. Notes and photos can be added or deleted but not
 edited. If the rules reject the collection entirely, the page falls back to saving on the device
 and shows a banner saying so.

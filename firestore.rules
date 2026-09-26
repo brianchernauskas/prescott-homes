@@ -17,10 +17,10 @@ service cloud.firestore {
 
     // --- Prescott Home Tour ----------------------------------------------
     // Still no login, but only the shapes the site actually writes are
-    // accepted: four known houses, known fields, capped sizes. Notes and
+    // accepted: seven known houses, known fields, capped sizes. Notes and
     // photos can be added or deleted, never edited in place.
     function isHouse(h) {
-      return h in ['quintero', 'lavalley', 'pyrite', 'idylwild'];
+      return h in ['quintero', 'lavalley', 'pyrite', 'idylwild', 'banning', 'quartz', 'ponderosa'];
     }
     function str(v, max) {
       return v is string && v.size() <= max;
