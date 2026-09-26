@@ -45,6 +45,8 @@ export const RECOMMENDED = ['quintero', 'idylwild', 'banning', 'lavalley', 'quar
 const LIST_URL = 'https://www.flexmls.com/link.html?1zd6jq9y4g1o,12,1,44074';
 
 const px = (base, ids) => ids.map(id => `https://${base}${id}od-w1024_h768.jpg`);
+// flexmls (Spark) photos: the id minus its trailing zeros, served resized to fit 1024x768.
+const spark = ids => ids.map(id => `https://cdn.resize.sparkplatform.com/paz/1024x768/true/${id}000000-o.jpg`);
 
 export const HOUSES = [
   {
@@ -253,7 +255,16 @@ export const HOUSES = [
     elevation: 5569,
     area: 'Haisley Homestead · cul-de-sac off White Spar Rd',
     photoCount: 32,
-    photos: ['https://cdn1.photos.sparkplatform.com/paz/20260717210218632165000000.jpg'],
+    photos: spark([
+      '20260717210218632165', '20260717210220279854', '20260717210221401067', '20260717210222289713',
+      '20260717210223577246', '20260717210224522067', '20260717210225536533', '20260717210226502956',
+      '20260717210227349975', '20260717210228241531', '20260717210229205475', '20260717210230179995',
+      '20260717210231020223', '20260717210231833442', '20260717210232672725', '20260717210233523156',
+      '20260717210234462784', '20260717210235253051', '20260717210236449899', '20260717210237666329',
+      '20260717210238816266', '20260717210240242989', '20260717210241577667', '20260717210242921998',
+      '20260717210244315923', '20260717210245725176', '20260717210248651164', '20260717210249939937',
+      '20260717210252442445', '20260717210254507182', '20260717210256652557', '20260717210259022027',
+    ]),
     summary: 'A 1982 two-story in the pines of Haisley Homestead, in a small cul-de-sac 9 minutes from the hotel. The biggest house on the list at 1,693 sq ft, with a wrap-around deck, a wood-burning fireplace in the family room, an island kitchen, a two-car garage and central air. The neighborhood has a pool and tennis.',
     good: ['Most house of the six: 1,693 sq ft, 2-car garage, central A/C', 'City water and sewer, nothing to maintain like a well or septic', 'Lowest wildfire risk of the mountain-side homes', 'Two minutes from restaurants on White Spar'],
     ask: [
@@ -298,8 +309,17 @@ export const HOUSES = [
     garage: '1-car + 2-car carport',
     elevation: 5705,
     area: 'Ponderosa Park · end of a paved road, borders national forest',
-    photoCount: null,
-    photos: ['https://cdn2.photos.sparkplatform.com/paz/20251224010820648638000000.jpg'],
+    photoCount: 32,
+    photos: spark([
+      '20251224010820648638', '20251224010818907009', '20251224010819796102', '20251224010821470249',
+      '20251224010822273776', '20251224010822944829', '20251224010823718789', '20251224010824433057',
+      '20251224010825133644', '20251224010825793946', '20251224010826476769', '20251224010827158531',
+      '20251224010827830499', '20251224010828536107', '20251224010829305285', '20251224010830000644',
+      '20251224010830572372', '20251224010831245404', '20251224010831796777', '20251224010832464218',
+      '20251224010833267253', '20251224010834087955', '20251224010835006384', '20251224010835829758',
+      '20251224010836535450', '20251224010837268580', '20251224010837986851', '20251224010838499892',
+      '20251224010839087841', '20251224010839794439', '20251224010841416981', '20251224010842173674',
+    ]),
     summary: 'A 1958 ranch at the end of the road in Ponderosa Park, backing onto Prescott National Forest with a seasonal creek along one side. Main house plus an attached guest studio over the garage/workshop, each with its own mini-split, a covered 2-car carport and an oversized patio. It is sold furnished and the agent notes there are no known rental restrictions.',
     good: ['Guest studio for rent, family or an office, and no known rental restrictions', 'Sold furnished; workshop, carport and shed', 'Forest trails from the door, seasonal creek, end-of-road privacy', 'No HOA'],
     ask: [
@@ -345,8 +365,17 @@ export const HOUSES = [
     garage: 'No garage · 1 carport',
     elevation: 5641,
     area: 'Ponderosa Park · just past Libby Loop, off Hwy 89 south',
-    photoCount: null,
-    photos: ['https://cdn1.photos.sparkplatform.com/paz/20260612232615511916000000.jpg'],
+    photoCount: 30,
+    photos: spark([
+      '20260612232615511916', '20260612232219301490', '20260612232242798841', '20260612232301121206',
+      '20260612232316285737', '20260612232331457529', '20260612232338546251', '20260612232343171825',
+      '20260612232349315693', '20260612232355795494', '20260612232401290409', '20260612232406510816',
+      '20260612233157123131', '20260612233229961818', '20260612233245416998', '20260612233251345038',
+      '20260612233303629232', '20260612233316559678', '20260612233324211851', '20260612233506994735',
+      '20260612233521567112', '20260612233545987095', '20260612233620782377', '20260612233642171531',
+      '20260612233701695496', '20260612233708790521', '20260612234003245688', '20260612234010207538',
+      '20260612234016867417', '20260612234023877287',
+    ]),
     summary: 'A flat, private 1969 ranch on a lot under ponderosa pines in Ponderosa Park, a 1950s subdivision of an 1884 homestead with a voluntary HOA, its own water company and a fire station next door. Updated flooring, paint, roof and plumbing, a walk-in closet and a deck off the primary suite. About 5 miles from downtown.',
     good: ['Level lot, single story, roof and plumbing updated', 'Fire station adjacent', 'Deck off the primary suite and a fenced private yard with shed', 'Lowest price of the three new ones'],
     ask: [
