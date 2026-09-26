@@ -25,21 +25,23 @@ export const PLACES = {
 
 // Drive legs [miles, minutes] from OSRM. "home" = Chandler start (location withheld).
 export const LEGS = {
-  home:     { hotel: [127.2, 155], quintero: [129.2, 152], lavalley: [129.1, 160], pyrite: [132.9, 170], idylwild: [128.7, 158], banning: [130.0, 164], quartz: [133.0, 170], ponderosa: [133.3, 171] },
-  hotel:    { home: [127.3, 157], whiskey: [0.7, 3], quintero: [8.9, 17], lavalley: [2.2, 7], pyrite: [6.2, 17], idylwild: [1.9, 5], banning: [2.8, 9], quartz: [5.8, 16], ponderosa: [6.1, 17] },
-  whiskey:  { hotel: [0.6, 3], quintero: [8.7, 17], lavalley: [1.8, 6], pyrite: [5.7, 16], idylwild: [1.4, 3], banning: [2.3, 7], quartz: [5.3, 14], ponderosa: [5.6, 15] },
-  quintero: { home: [129.4, 154], hotel: [8.9, 17], whiskey: [8.8, 18], lavalley: [9.8, 21], pyrite: [14.0, 31], idylwild: [8.7, 18], banning: [10.6, 22], quartz: [13.7, 29], ponderosa: [13.9, 30] },
-  lavalley: { home: [129.2, 162], hotel: [2.2, 7], whiskey: [1.8, 6], quintero: [9.8, 21], pyrite: [4.6, 12], idylwild: [2.4, 7], banning: [1.2, 4], quartz: [4.2, 11], ponderosa: [4.5, 12] },
-  pyrite:   { home: [133.1, 171], hotel: [6.2, 17], whiskey: [5.7, 15], quintero: [14.0, 31], lavalley: [4.6, 12], idylwild: [6.6, 17], banning: [4.0, 11], quartz: [0.4, 1], ponderosa: [0.2, 1] },
-  idylwild: { home: [128.9, 159], hotel: [1.9, 5], whiskey: [1.6, 4], quintero: [8.8, 18], lavalley: [2.4, 7], pyrite: [6.6, 17], banning: [3.3, 8], quartz: [6.3, 15], ponderosa: [6.5, 16] },
-  banning: { home: [130.0, 164], hotel: [2.8, 9], whiskey: [2.3, 7], quintero: [10.6, 22], lavalley: [1.2, 4], pyrite: [4.0, 11], idylwild: [3.3, 8], quartz: [3.7, 10], ponderosa: [3.9, 11] },
-  quartz: { home: [133.0, 170], hotel: [5.8, 16], whiskey: [5.3, 14], quintero: [13.7, 29], lavalley: [4.2, 11], pyrite: [0.4, 1], idylwild: [6.3, 15], banning: [3.7, 10], ponderosa: [0.3, 1] },
-  ponderosa: { home: [133.3, 171], hotel: [6.1, 17], whiskey: [5.6, 15], quintero: [13.9, 30], lavalley: [4.5, 12], pyrite: [0.2, 1], idylwild: [6.5, 16], banning: [3.9, 11], quartz: [0.3, 1] },
+  home:     { hotel: [127.2, 155], quintero: [129.2, 152], lavalley: [129.1, 160], pyrite: [132.9, 170], idylwild: [128.7, 158], banning: [130.0, 164], quartz: [133.0, 170], ponderosa: [133.3, 171], deadwood: [129.4, 153] },
+  hotel:    { home: [127.3, 157], whiskey: [0.7, 3], quintero: [8.9, 17], lavalley: [2.2, 7], pyrite: [6.2, 17], idylwild: [1.9, 5], banning: [2.8, 9], quartz: [5.8, 16], ponderosa: [6.1, 17], deadwood: [8.5, 17] },
+  whiskey:  { hotel: [0.6, 3], quintero: [8.7, 17], lavalley: [1.8, 6], pyrite: [5.7, 16], idylwild: [1.4, 3], banning: [2.3, 7], quartz: [5.3, 14], ponderosa: [5.6, 15], deadwood: [8.4, 17] },
+  quintero: { home: [129.4, 154], hotel: [8.9, 17], whiskey: [8.8, 18], lavalley: [9.8, 21], pyrite: [14.0, 31], idylwild: [8.7, 18], banning: [10.6, 22], quartz: [13.7, 29], ponderosa: [13.9, 30], deadwood: [0.6, 2] },
+  lavalley: { home: [129.2, 162], hotel: [2.2, 7], whiskey: [1.8, 6], quintero: [9.8, 21], pyrite: [4.6, 12], idylwild: [2.4, 7], banning: [1.2, 4], quartz: [4.2, 11], ponderosa: [4.5, 12], deadwood: [9.4, 20] },
+  pyrite:   { home: [133.1, 171], hotel: [6.2, 17], whiskey: [5.7, 15], quintero: [14.0, 31], lavalley: [4.6, 12], idylwild: [6.6, 17], banning: [4.0, 11], quartz: [0.4, 1], ponderosa: [0.2, 1], deadwood: [13.6, 30] },
+  idylwild: { home: [128.9, 159], hotel: [1.9, 5], whiskey: [1.6, 4], quintero: [8.8, 18], lavalley: [2.4, 7], pyrite: [6.6, 17], banning: [3.3, 8], quartz: [6.3, 15], ponderosa: [6.5, 16], deadwood: [8.4, 17] },
+  banning: { home: [130.0, 164], hotel: [2.8, 9], whiskey: [2.3, 7], quintero: [10.6, 22], lavalley: [1.2, 4], pyrite: [4.0, 11], idylwild: [3.3, 8], quartz: [3.7, 10], ponderosa: [3.9, 11], deadwood: [10.2, 22] },
+  quartz: { home: [133.0, 170], hotel: [5.8, 16], whiskey: [5.3, 14], quintero: [13.7, 29], lavalley: [4.2, 11], pyrite: [0.4, 1], idylwild: [6.3, 15], banning: [3.7, 10], ponderosa: [0.3, 1], deadwood: [13.2, 29] },
+  ponderosa: { home: [133.3, 171], hotel: [6.1, 17], whiskey: [5.6, 15], quintero: [13.9, 30], lavalley: [4.5, 12], pyrite: [0.2, 1], idylwild: [6.5, 16], banning: [3.9, 11], quartz: [0.3, 1], deadwood: [13.5, 30] },
+  deadwood: { home: [129.4, 153], hotel: [8.5, 17], whiskey: [8.3, 17], quintero: [0.6, 2], lavalley: [9.4, 20], pyrite: [13.6, 30], idylwild: [8.4, 17], banning: [10.2, 22], quartz: [13.2, 29], ponderosa: [13.5, 30] },
 };
-
-// Pyrite went under contract 2026-09-23, so it's off the route but still on the page.
-// The three agent-collection houses added 2026-09-26 are all on Saturday; `defaultDay: 'sun'` on a house would default it to Sunday.
-export const RECOMMENDED = ['quintero', 'idylwild', 'banning', 'lavalley', 'quartz', 'ponderosa'];
+// Pyrite (2026-09-23) and Quintero (2026-09-26) went under contract, so they're off the route but still on the page.
+// Saturday 2026-09-26 follows the order Brian set: meet the realtor at Ponderosa Park at 10:30, then north
+// to Deadwood. `defaultDay: 'sun'` on a house would default it to Sunday.
+export const RECOMMENDED = ['ponderosa', 'quartz', 'banning', 'lavalley', 'idylwild', 'deadwood'];
+export const SAT_BOOKED = { ponderosa: '10:30' };
 
 // The agent's flexmls collection of the three added houses (MLS sheets, no login needed).
 const LIST_URL = 'https://www.flexmls.com/link.html?1zd6jq9y4g1o,12,1,44074';
@@ -61,7 +63,9 @@ export const HOUSES = [
     lotAcres: null, lotNote: 'Not listed — ask the builder',
     yearBuilt: 2026, yearNote: 'New build, under construction',
     listed: '2026-09-17',
-    status: 'New construction',
+    status: 'Under contract',
+    inactive: true,
+    statusNote: 'Went under contract on Sep 26. Left here for comparison. Deadwood, the Davidson model home a half mile away in the same community, is on the route instead.',
     hoa: 'Not listed — ask',
     tax: 'New build — not yet assessed',
     water: 'Not listed', sewer: 'Not listed',
@@ -397,6 +401,60 @@ export const HOUSES = [
       grocery:    { name: 'Safeway', where: 'White Spar Rd', mi: 4.7, min: 12, lat: 34.531106, lon: -112.4748115 },
       gas:        { name: 'Shell', where: 'Grove Ave', mi: 5.9, min: 15, lat: 34.5462235, lon: -112.4755088 },
       restaurant: { name: 'Badger’s Den', where: 'White Spar Rd', mi: 3.9, min: 10, lat: 34.5210348, lon: -112.4790699 },
+    },
+  },
+  // --- Added 2026-09-26: Davidson Homes model in South Ranch, half a mile from Quintero.
+  // Facts: realtor.com (MLS) and the builder's page. Drive legs and nearby places: OSRM; elevation: USGS EPQS;
+  // wildfire: the same 7x7 USFS grid. The drive from Chandler is Quintero's leg, adjusted, since the start stays private.
+  {
+    id: 'deadwood',
+    short: 'Deadwood',
+    addr: '1255 Deadwood Ln',
+    city: 'Prescott, AZ 86305',
+    lat: 34.637233, lon: -112.442861,
+    url: 'https://www.realtor.com/realestateandhomes-detail/M9981242123',
+    price: 519990,
+    beds: 2, baths: 2.5, sqft: 1397,
+    lotAcres: null, lotNote: 'Not listed, ask the builder',
+    yearBuilt: 2024, yearNote: 'Builder’s model home',
+    listed: '2025-07-12',
+    status: 'Model home · leaseback',
+    hoa: 'Not listed, ask',
+    tax: 'Not listed',
+    water: 'Not listed', sewer: 'Not listed',
+    heat: 'Not listed (electric appliances)', cool: 'Not listed',
+    garage: '3-car insulated',
+    elevation: 5109,
+    area: 'South Ranch (Southern Collection) · north Prescott off Hwy 89',
+    builder: 'Davidson Homes',
+    photoCount: 25,
+    photos: px('nh.rdcpix.com/70506adfdcf1e3ddfc7df53e5594e98fl-', [
+      'f1857766046', 'f3325145166', 'f516748984', 'f710601094', 'f1107452100',
+      'f233650569', 'f1528286666', 'f2551308030', 'f1244556604', 'f3247717210',
+      'f3552660033', 'f2512529780', 'f1674080984', 'f1780740286', 'f1282914942',
+      'f2089604539', 'f1633094948', 'f2884320026', 'f186656910', 'f2959523747',
+      'f888175252', 'f4196709078', 'f4200960456', 'f1358904432', 'f3855034161',
+    ]),
+    summary: 'Davidson Homes’ two-story Wilmington B model on homesite 45: two bedrooms plus a loft, 2.5 baths, LVP floors, quartz counters, stainless electric appliances and a 3-car insulated garage, with landscaped front and back yards and a water feature. It’s sold with a leaseback, so the builder stays on as a paying tenant while it’s still their model. Cut $15,000 from $534,990.',
+    good: ['Newest house on the list, fully finished and landscaped', '3-car insulated garage, the most garage of any stop', 'Builder leaseback pays rent while you aren’t using it', 'Lowest modeled home fire risk, with Quintero'],
+    ask: [
+      'The builder’s page shows a “Sold” tag: is it still available?',
+      'Leaseback: monthly rent, how long, who pays upkeep and utilities, and when you could use the house',
+      'Model upgrades and furniture: which stay, and which finishes are upgrades',
+      'Lot size, HOA dues, and when the promised pool and clubhouse open',
+      'Warranty start date, since it’s been a model since 2024',
+      'Airport noise: Prescott Regional Airport is about 2 miles northeast',
+    ],
+    fire: {
+      rating: 'Moderate', tone: 'mod',
+      mix: { low: 33, moderate: 4, high: 63, veryHigh: 0, nonburn: 0 },
+      rps: 18, flame: 'Short flames (grass)',
+      text: 'Most of the 200 m around the house, mainly the open ground to the south, is rated High hazard, but it’s grassland, so the modeled risk to a home stays low, about the same as Quintero next door. Grass fires move fast, so ask what the builder keeps mowed along the edge of the subdivision.',
+    },
+    near: {
+      grocery:    { name: 'Fry’s Food and Drug', where: 'Willow Creek Rd', mi: 3.2, min: 7, lat: 34.6005859, lon: -112.4584725 },
+      gas:        { name: 'Circle K', where: 'Hwy 89', mi: 1.8, min: 4, lat: 34.6440986, lon: -112.432763 },
+      restaurant: { name: 'Suzie’s Skyway Restaurant', where: 'at the airport', mi: 2.5, min: 6, lat: 34.6497888, lon: -112.427214 },
     },
   },
 ];

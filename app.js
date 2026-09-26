@@ -1,5 +1,5 @@
-import { TRIP, PLACES, LEGS, RECOMMENDED, HOUSES, SCORE_CATS } from './data.js?v=202609261515';
-import * as store from './store.js?v=202609261515';
+import { TRIP, PLACES, LEGS, RECOMMENDED, SAT_BOOKED, HOUSES, SCORE_CATS } from './data.js?v=202609260845';
+import * as store from './store.js?v=202609260845';
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -13,7 +13,7 @@ const isActive = id => Boolean(byId[id]) && !byId[id].inactive;
 const DEFAULT_PLAN = () => ({
   order: [...RECOMMENDED],
   day: Object.fromEntries(ACTIVE.map(h => [h.id, h.defaultDay || 'sat'])),
-  booked: {},
+  booked: { ...SAT_BOOKED },
   depart: '08:00',
   sunStart: '09:00',
   dwell: 45,
@@ -51,13 +51,15 @@ function buildDay(day) {
   const stops = plan.order.filter(id => isActive(id) && plan.day[id] === day);
   const items = [];
   const startAt = day === 'sat' ? 'home' : 'hotel';
-  let t = toMin(day === 'sat' ? plan.depart : plan.sunStart);
-  items.push({ kind: 'fixed', t, label: day === 'sat' ? 'Leave Chandler' : 'Leave SpringHill Suites', icon: day === 'sat' ? '🚗' : 'H' });
-  let at = startAt, lunched = !plan.lunch || day === 'sun';
+  // A booked first stop on Saturday anchors the day: it starts at that meeting, not a Chandler departure.
+  const firstBooked = day === 'sat' && stops.length && plan.booked[stops[0]];
+  let t = toMin(firstBooked || (day === 'sat' ? plan.depart : plan.sunStart));
+  items.push({ kind: 'fixed', t, label: firstBooked ? 'Meet your realtor' : day === 'sat' ? 'Leave Chandler' : 'Leave SpringHill Suites', icon: firstBooked ? '🤝' : day === 'sat' ? '🚗' : 'H' });
+  let at = firstBooked ? stops[0] : startAt, lunched = !plan.lunch || day === 'sun';
   stops.forEach((id, i) => {
     const d = leg(at, id);
     t += d.min;
-    items.push({ kind: 'drive', ...d });
+    if (at !== id) items.push({ kind: 'drive', ...d });
     const b = plan.booked[id];
     let wait = 0;
     if (b && toMin(b) > t) { wait = toMin(b) - t; t = toMin(b); }

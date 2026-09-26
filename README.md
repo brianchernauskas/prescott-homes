@@ -1,7 +1,7 @@
 # Prescott Home Tour
 
 A phone-first planner for a Sat Sep 26 – Sun Sep 27, 2026 house-hunting weekend in Prescott, AZ:
-seven listings (realtor.com plus the agent’s flexmls collection), a map, a suggested visit order, and shared notes, photos and 1–5 scores.
+eight listings (realtor.com, the agent’s flexmls collection and a Davidson model home), a map, a suggested visit order, and shared notes, photos and 1–5 scores.
 
 Live: https://brianchernauskas.github.io/prescott-homes/
 
@@ -11,7 +11,7 @@ Live: https://brianchernauskas.github.io/prescott-homes/
 | --- | --- |
 | `index.html` | Page shell |
 | `style.css` | All styling, light + dark |
-| `data.js` | The seven houses, drive-time matrix, wildfire figures, nearest places |
+| `data.js` | The eight houses, drive-time matrix, wildfire figures, nearest places |
 | `store.js` | Firestore adapter with a this-device-only fallback |
 | `app.js` | Plan builder, map, house pages, notes/photos/scores, compare table |
 
@@ -35,7 +35,7 @@ The Chandler start address is never stored. `data.js` has drive times from it, n
 The page uses the existing `bourbonffldraft` Firebase project (the pick'em site's), in its own
 `prescott` collection. [`firestore.rules`](firestore.rules) is the **full** rules file for the
 project: paste all of it into Firebase console → bourbonffldraft → Firestore → Rules. It leaves
-the pick'em blocks unchanged and accepts only what this site actually writes: the seven known
+the pick'em blocks unchanged and accepts only what this site actually writes: the eight known
 houses, the known fields, and capped sizes. Notes and photos can be added or deleted but not
 edited. If the rules reject the collection entirely, the page falls back to saving on the device
 and shows a banner saying so.
